@@ -42,20 +42,17 @@ class UserData {
 
     try {
       await account.updateName(name: name);
-      await database.createDocument(
-          collectionId: '629de011285e126b9c99',
-          documentId: res.$id,
-          data: {
-            'name': name,
-            'bio': bio,
-            'imgId': imgId,
-            'email': res.email,
-            'id': res.$id,
-          },
-          read: [
-            'role:all',
-            'user:${res.$id}'
-          ]);
+      await database
+          .createDocument(collectionId: 'id', documentId: res.$id, data: {
+        'name': name,
+        'bio': bio,
+        'imgId': imgId,
+        'email': res.email,
+        'id': res.$id,
+      }, read: [
+        'role:all',
+        'user:${res.$id}'
+      ]);
     } catch (_) {
       rethrow;
     }
@@ -64,8 +61,8 @@ class UserData {
   Future<ConvUser?> getCurrentUser() async {
     try {
       final user = await account.get();
-      final data = await database.getDocument(
-          collectionId: '629de011285e126b9c99', documentId: user.$id);
+      final data =
+          await database.getDocument(collectionId: 'id', documentId: user.$id);
       final img = await _getProfilePicture(data.data['imgId']);
       return ConvUser.fromMap(data.data).copyWith(image: img);
     } catch (_) {
